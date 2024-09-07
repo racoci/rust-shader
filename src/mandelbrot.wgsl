@@ -1,4 +1,5 @@
 // mandelbrot.wgsl
+
 @group(0) @binding(0) var<uniform> zoom: f32;
 @group(0) @binding(1) var<uniform> time: f32;
 
@@ -41,12 +42,24 @@ fn fs_main(input: VertexOutput) -> @location(0) vec4<f32> {
 
     var iter: i32 = 0;
     let max_iter = 100;
+    var escaped = false;
 
+    // Mandelbrot equation iteration loop
     while (iter < max_iter && dot(z, z) < 4.0) {
         z = vec2<f32>(z.x * z.x - z.y * z.y + c.x, 2.0 * z.x * z.y + c.y);
         iter = iter + 1;
+        if (dot(z, z) >= 4.0) {
+            escaped = true;
+            break;
+        }
     }
 
-    let color = vec3<f32>(f32(iter) / f32(max_iter), 0.5 + 0.5 * sin(time), 0.5);
-    return vec4<f32>(color, 1.0);
+    // Color based on the number of iterations until escape
+    if escaped {
+        let escape_value = f32(iter) / f32(max_iter); // Normalize to [0, 1]
+        return vec4<f32>(escape_value, escape_value * 0.5, escape_value * 0.25, 1.0);
+    } else {
+        // Color black for points inside the set
+        return vec4<f32>(0.0, 0.0, 0.0, 1.0);
+    }
 }
