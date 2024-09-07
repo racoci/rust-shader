@@ -1,8 +1,11 @@
-use wgpu::util::DeviceExt;
+use wgpu::InstanceDescriptor;
 
 async fn run() {
     // Create an instance for GPU communication
-    let instance = wgpu::Instance::new(wgpu::Backends::all());
+    let instance = wgpu::Instance::new(InstanceDescriptor {
+        backends: wgpu::Backends::all(),
+        dx12_shader_compiler: Default::default(),
+    });
 
     // Request the first available adapter
     let adapter = instance.request_adapter(&wgpu::RequestAdapterOptions {
