@@ -22,7 +22,19 @@ fn vs_main(@builtin(vertex_index) vertex_index: u32) -> VertexOutput {
 fn fs_main(input: VertexOutput) -> @location(0) vec4<f32> {
     let width: f32 = 800.0;
     let height: f32 = 600.0;
-    let coord = vec2<f32>((input.position.x / width - 0.5) * 3.0 / zoom, (input.position.y / height - 0.5) * 2.0 / zoom);
+
+    // Define the point to zoom into
+    let zoom_point = vec2<f32>(-0.75, 0.1); // Example point at the edge of the set
+
+    // Dynamically adjust zoom level based on time
+    let zoom_factor = zoom * pow(1.75, time); // Zoom in over time, increasing the base by a small factor
+
+
+    // Compute Mandelbrot coordinates
+    let coord = vec2<f32>(
+        (input.position.x / width - 0.5) * 3.0 / zoom_factor + zoom_point.x,
+        (input.position.y / height - 0.5) * 2.0 / zoom_factor + zoom_point.y
+    );
 
     var z = vec2<f32>(0.0, 0.0);
     let c = coord;

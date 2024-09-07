@@ -152,9 +152,9 @@ impl State {
 
     // Update uniform values for zoom and time
     fn update_uniforms(&self) {
-        let zoom_value: f32 = 1.0; // Example zoom value
         let time_value: f32 = self.start_time.elapsed().as_secs_f32();
-
+        let zoom_value: f32 = 1.0; // Set this to your base zoom level (e.g., 1.0)
+    
         self.queue.write_buffer(&self.zoom_buffer, 0, bytemuck::cast_slice(&[zoom_value]));
         self.queue.write_buffer(&self.time_buffer, 0, bytemuck::cast_slice(&[time_value]));
     }
